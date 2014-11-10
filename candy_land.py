@@ -6,7 +6,6 @@ def log(message):
 
 
 class Space(object):
-
     def __init__(self, start=False, end=False, red=False, purple=False,
                  yellow=False, blue=False, orange=False, green=False,
                  peppermint_pass_start=False, peppermint_pass_end=False,
@@ -101,6 +100,12 @@ class Card(object):
     def __init__(self, value):
         self.value = value
 
+    def __str__(self):
+        return self.value
+
+    def __repr__(self):
+        return 'Card(value={})'.format(repr(self.value))
+
     def is_single_color(self):
         return self.value in ['red', 'orange', 'yellow',
                               'green', 'blue', 'purple']
@@ -155,6 +160,12 @@ class Player(object):
         self.space_index = 0
         self.stuck_in_licorice = False
 
+    def __str__(self):
+        return 'Player {}'.format(self.color.capitalize())
+
+    def __repr__(self):
+        return 'Player(color={})'.format(repr(self.color))
+
 
 def main():
     game_on = True
@@ -171,11 +182,11 @@ def main():
         log('= Beginning of round {}'.format(round_no))
         log('= {} cards left in the deck.'.format(len(deck.cards)))
         for player in players:
-            m = 'Player {} is on space {} and takes a turn.'
-            log(m.format(player.color, player.space_index))
+            m = '{} is on space {} and takes a turn.'
+            log(m.format(player, player.space_index))
             if player.stuck_in_licorice:
-                m = 'Player {} is stuck in licorice and misses this turn.'
-                log(m.format(player.color))
+                m = '{} is stuck in licorice and misses this turn.'
+                log(m.format(player))
                 player.stuck_in_licorice = False
                 continue
             if len(deck.cards) == 0:
@@ -183,8 +194,8 @@ def main():
                 deck = Deck()
                 deck.shuffle()
             card = deck.draw()
-            m = 'Player {} draws a card: {}'
-            log(m.format(player.color, card.value))
+            m = '{} draws a card: {}'
+            log(m.format(player, card))
             if card.is_single_color():
                 start = player.space_index
                 player.space_index = board.next_match(start, card.value)
@@ -195,26 +206,26 @@ def main():
                 player.space_index = board.next_match(step, color)
             if card.is_special():
                 player.space_index = board.next_match(0, card.value)
-            m = 'Player {} moves to space {}.'
-            log(m.format(player.color, player.space_index))
+            m = '{} moves to space {}.'
+            log(m.format(player, player.space_index))
             space = board.spaces[player.space_index]
             if space.end:
                 game_on = False
-                log('Player {} wins!'.format(player.color))
+                log('{} wins!'.format(player))
                 break
             if space.peppermint_pass_start:
                 player.space_index = board.next_match(0, 'peppermint_pass_end')
-                m = 'Player {} goes down Peppermint Pass to space {}.'
-                log(m.format(player.color, player.space_index))
+                m = '{} goes down Peppermint Pass to space {}.'
+                log(m.format(player, player.space_index))
                 continue
             if space.gummy_pass_start:
                 player.space_index = board.next_match(0, 'gummy_pass_end')
-                m = 'Player {} goes down Gummy Pass to space {}.'
-                log(m.format(player.color, player.space_index))
+                m = '{} goes down Gummy Pass to space {}.'
+                log(m.format(player, player.space_index))
                 continue
             if space.licorice:
                 player.stuck_in_licorice = True
-                log('Player {} gets stuck in licorice!'.format(player.color))
+                log('{} gets stuck in licorice!'.format(player))
                 continue
         log('= End of round {}'.format(round_no))
 
