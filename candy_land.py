@@ -172,9 +172,7 @@ class Player(object):
 def main():
     game_on = True
     log('== Let\'s play Candy Land!')
-    players = list()
-    for color in ['red', 'yellow', 'green', 'blue']:
-        players.append(Player(color))
+    players = [Player(color) for color in ('red', 'yellow', 'green', 'blue')]
     board = Board()
     deck = Deck()
     deck.shuffle()
