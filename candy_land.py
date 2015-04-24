@@ -122,38 +122,37 @@ class Card(object):
                               'chocolate']
 
 
-class Deck(object):
+class Deck(list):
     def __init__(self):
-        self.cards = []
         for _ in range(6):
-            self.cards.append(Card(value='red'))
-            self.cards.append(Card(value='orange'))
-            self.cards.append(Card(value='yellow'))
-            self.cards.append(Card(value='green'))
-            self.cards.append(Card(value='blue'))
+            self.append(Card('red'))
+            self.append(Card('orange'))
+            self.append(Card('yellow'))
+            self.append(Card('green'))
+            self.append(Card('blue'))
         for _ in range(5):
-            self.cards.append(Card(value='purple'))
+            self.append(Card('purple'))
         for _ in range(4):
-            self.cards.append(Card(value='double_red'))
-            self.cards.append(Card(value='double_yellow'))
-            self.cards.append(Card(value='double_blue'))
-            self.cards.append(Card(value='double_purple'))
+            self.append(Card('double_red'))
+            self.append(Card('double_yellow'))
+            self.append(Card('double_blue'))
+            self.append(Card('double_purple'))
         for _ in range(3):
-            self.cards.append(Card(value='double_orange'))
-            self.cards.append(Card(value='double_green'))
-        self.cards.append(Card(value='cupcake'))
-        self.cards.append(Card(value='ice_cream'))
-        self.cards.append(Card(value='gummy_star'))
-        self.cards.append(Card(value='gingerbread'))
-        self.cards.append(Card(value='lollypop'))
-        self.cards.append(Card(value='popsicle'))
-        self.cards.append(Card(value='chocolate'))
+            self.append(Card('double_orange'))
+            self.append(Card('double_green'))
+        self.append(Card('cupcake'))
+        self.append(Card('ice_cream'))
+        self.append(Card('gummy_star'))
+        self.append(Card('gingerbread'))
+        self.append(Card('lollypop'))
+        self.append(Card('popsicle'))
+        self.append(Card('chocolate'))
 
     def draw(self):
-        return self.cards.pop()
+        return self.pop()
 
     def shuffle(self):
-        random.shuffle(self.cards)
+        random.shuffle(self)
 
 
 class Player(object):
@@ -180,7 +179,7 @@ def main():
     while game_on:
         round_no += 1
         log('= Beginning of round {}'.format(round_no))
-        log('= {} cards left in the deck.'.format(len(deck.cards)))
+        log('= {} cards left in the deck.'.format(len(deck)))
         for player in players:
             m = '{} is on space {} and takes a turn.'
             log(m.format(player, player.space_index))
@@ -189,7 +188,7 @@ def main():
                 log(m.format(player))
                 player.stuck_in_licorice = False
                 continue
-            if len(deck.cards) == 0:
+            if len(deck) == 0:
                 log('The deck is empty! Shuffling a new deck.')
                 deck = Deck()
                 deck.shuffle()
