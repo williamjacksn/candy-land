@@ -113,8 +113,7 @@ class Card(object):
 
     @property
     def is_double_color(self):
-        return self.value in ['double_red', 'double_orange', 'double_yellow',
-                              'double_green', 'double_blue', 'double_purple']
+        return self.value.startswith('double_')
 
     @property
     def is_special(self):
