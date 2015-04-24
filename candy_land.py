@@ -106,14 +106,17 @@ class Card(object):
     def __repr__(self):
         return 'Card(value={})'.format(repr(self.value))
 
+    @property
     def is_single_color(self):
         return self.value in ['red', 'orange', 'yellow',
                               'green', 'blue', 'purple']
 
+    @property
     def is_double_color(self):
         return self.value in ['double_red', 'double_orange', 'double_yellow',
                               'double_green', 'double_blue', 'double_purple']
 
+    @property
     def is_special(self):
         return self.value in ['cupcake', 'ice_cream', 'gummy_star',
                               'gingerbread', 'lollypop', 'popsicle',
@@ -196,15 +199,15 @@ def main():
             card = deck.draw()
             m = '{} draws a card: {}'
             log(m.format(player, card))
-            if card.is_single_color():
+            if card.is_single_color:
                 start = player.space_index
                 player.space_index = board.next_match(start, card.value)
-            if card.is_double_color():
+            if card.is_double_color:
                 color = card.value[7:]
                 start = player.space_index
                 step = board.next_match(start, color)
                 player.space_index = board.next_match(step, color)
-            if card.is_special():
+            if card.is_special:
                 player.space_index = board.next_match(0, card.value)
             m = '{} moves to space {}.'
             log(m.format(player, player.space_index))
