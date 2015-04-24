@@ -178,7 +178,7 @@ def main():
     deck.shuffle()
     round_no = 0
     while game_on:
-        round_no = round_no + 1
+        round_no += 1
         log('= Beginning of round {}'.format(round_no))
         log('= {} cards left in the deck.'.format(len(deck.cards)))
         for player in players:
