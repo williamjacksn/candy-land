@@ -1,3 +1,4 @@
+import collections
 import random
 
 
@@ -124,6 +125,7 @@ class Card(object):
 
 class Deck(list):
     def __init__(self):
+        super(Deck, self).__init__()
         for _ in range(6):
             self.append(Card('red'))
             self.append(Card('orange'))
@@ -168,9 +170,11 @@ class Player(object):
         return 'Player(color={})'.format(repr(self.color))
 
 
-def main():
+def play_game(on_screen=False):
+    result = {}
     game_on = True
-    log('== Let\'s play Candy Land!')
+    if on_screen:
+        log('== Let\'s play Candy Land!')
     players = [Player(color) for color in ('red', 'yellow', 'green', 'blue')]
     board = Board()
     deck = Deck()
@@ -178,23 +182,28 @@ def main():
     round_no = 0
     while game_on:
         round_no += 1
-        log('= Beginning of round {}'.format(round_no))
-        log('= {} cards left in the deck.'.format(len(deck)))
+        if on_screen:
+            log('= Beginning of round {}'.format(round_no))
+            log('= {} cards left in the deck.'.format(len(deck)))
         for player in players:
-            m = '{} is on space {} and takes a turn.'
-            log(m.format(player, player.space_index))
+            if on_screen:
+                m = '{} is on space {} and takes a turn.'
+                log(m.format(player, player.space_index))
             if player.stuck_in_licorice:
-                m = '{} is stuck in licorice and misses this turn.'
-                log(m.format(player))
+                if on_screen:
+                    m = '{} is stuck in licorice and misses this turn.'
+                    log(m.format(player))
                 player.stuck_in_licorice = False
                 continue
             if len(deck) == 0:
-                log('The deck is empty! Shuffling a new deck.')
+                if on_screen:
+                    log('The deck is empty! Shuffling a new deck.')
                 deck = Deck()
                 deck.shuffle()
             card = deck.draw()
-            m = '{} draws a card: {}'
-            log(m.format(player, card))
+            if on_screen:
+                m = '{} draws a card: {}'
+                log(m.format(player, card))
             if card.is_single_color:
                 start = player.space_index
                 player.space_index = board.next_match(start, card.value)
@@ -205,28 +214,45 @@ def main():
                 player.space_index = board.next_match(step, color)
             if card.is_special:
                 player.space_index = board.next_match(0, card.value)
-            m = '{} moves to space {}.'
-            log(m.format(player, player.space_index))
+            if on_screen:
+                m = '{} moves to space {}.'
+                log(m.format(player, player.space_index))
             space = board.spaces[player.space_index]
             if space.end:
+                result['winner'] = player
                 game_on = False
-                log('{} wins!'.format(player))
+                if on_screen:
+                    log('{} wins!'.format(player))
                 break
             if space.peppermint_pass_start:
                 player.space_index = board.next_match(0, 'peppermint_pass_end')
-                m = '{} goes down Peppermint Pass to space {}.'
-                log(m.format(player, player.space_index))
+                if on_screen:
+                    m = '{} goes down Peppermint Pass to space {}.'
+                    log(m.format(player, player.space_index))
                 continue
             if space.gummy_pass_start:
                 player.space_index = board.next_match(0, 'gummy_pass_end')
-                m = '{} goes down Gummy Pass to space {}.'
-                log(m.format(player, player.space_index))
+                if on_screen:
+                    m = '{} goes down Gummy Pass to space {}.'
+                    log(m.format(player, player.space_index))
                 continue
             if space.licorice:
                 player.stuck_in_licorice = True
-                log('{} gets stuck in licorice!'.format(player))
+                if on_screen:
+                    log('{} gets stuck in licorice!'.format(player))
                 continue
-        log('= End of round {}'.format(round_no))
+        if on_screen:
+            log('= End of round {}'.format(round_no))
+    return result
+
+
+def main():
+    winning_color = collections.Counter()
+    for _ in range(10000):
+        result = play_game(on_screen=False)
+        winner = result['winner']
+        winning_color.update([winner.color])
+    print(winning_color)
 
 if __name__ == '__main__':
     main()
