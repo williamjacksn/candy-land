@@ -220,6 +220,7 @@ def play_game(on_screen=False):
             space = board.spaces[player.space_index]
             if space.end:
                 result['winner'] = player
+                result['rounds'] = round_no
                 game_on = False
                 if on_screen:
                     log('{} wins!'.format(player))
@@ -247,12 +248,14 @@ def play_game(on_screen=False):
 
 
 def main():
-    winning_color = collections.Counter()
+    stats = collections.Counter()
     for _ in range(10000):
         result = play_game(on_screen=False)
         winner = result['winner']
-        winning_color.update([winner.color])
-    print(winning_color)
+        stats.update([winner.color + '_win'])
+        rounds = str(result['rounds'])
+        stats.update([rounds + '_rounds'])
+    print(stats)
 
 if __name__ == '__main__':
     main()
