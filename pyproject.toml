@@ -1,0 +1,7 @@
+[project]
+name = "candy-land"
+version = "2025.0"
+description = "Candy Land game simulation"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
