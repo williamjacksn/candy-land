@@ -2,34 +2,34 @@ import collections
 import random
 
 
-def log(message):
+def log(message: str) -> None:
     print(message)
 
 
-class Space(object):
+class Space:
     def __init__(
         self,
-        start=False,
-        end=False,
-        red=False,
-        purple=False,
-        yellow=False,
-        blue=False,
-        orange=False,
-        green=False,
-        peppermint_pass_start=False,
-        peppermint_pass_end=False,
-        gummy_pass_start=False,
-        gummy_pass_end=False,
-        cupcake=False,
-        ice_cream=False,
-        gummy_star=False,
-        gingerbread=False,
-        lollypop=False,
-        popsicle=False,
-        chocolate=False,
-        licorice=False,
-    ):
+        start: bool = False,
+        end: bool = False,
+        red: bool = False,
+        purple: bool = False,
+        yellow: bool = False,
+        blue: bool = False,
+        orange: bool = False,
+        green: bool = False,
+        peppermint_pass_start: bool = False,
+        peppermint_pass_end: bool = False,
+        gummy_pass_start: bool = False,
+        gummy_pass_end: bool = False,
+        cupcake: bool = False,
+        ice_cream: bool = False,
+        gummy_star: bool = False,
+        gingerbread: bool = False,
+        lollypop: bool = False,
+        popsicle: bool = False,
+        chocolate: bool = False,
+        licorice: bool = False,
+    ) -> None:
         self.start = start
         self.end = end
         self.red = red
@@ -52,8 +52,8 @@ class Space(object):
         self.licorice = licorice
 
 
-class Board(object):
-    def __init__(self):
+class Board:
+    def __init__(self) -> None:
         self.spaces = [
             Space(start=True),
             Space(red=True),
@@ -199,33 +199,33 @@ class Board(object):
             ),
         ]
 
-    def next_match(self, start, attr):
+    def next_match(self, start: int, attr: str) -> int:
         for i, space in enumerate(self.spaces):
             if i > start and getattr(space, attr):
                 return i
         return start
 
 
-class Card(object):
-    def __init__(self, value):
+class Card:
+    def __init__(self, value: str) -> None:
         self.value = value
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.value
 
-    def __repr__(self):
-        return "Card(value={})".format(repr(self.value))
+    def __repr__(self) -> str:
+        return f"Card(value={self.value!r})"
 
     @property
-    def is_single_color(self):
+    def is_single_color(self) -> bool:
         return self.value in ["red", "orange", "yellow", "green", "blue", "purple"]
 
     @property
-    def is_double_color(self):
+    def is_double_color(self) -> bool:
         return self.value.startswith("double_")
 
     @property
-    def is_special(self):
+    def is_special(self) -> bool:
         return self.value in [
             "cupcake",
             "ice_cream",
@@ -238,8 +238,8 @@ class Card(object):
 
 
 class Deck(list):
-    def __init__(self):
-        super(Deck, self).__init__()
+    def __init__(self) -> None:
+        super().__init__()
         for _ in range(6):
             self.append(Card("red"))
             self.append(Card("orange"))
@@ -264,27 +264,27 @@ class Deck(list):
         self.append(Card("popsicle"))
         self.append(Card("chocolate"))
 
-    def draw(self):
+    def draw(self) -> Card:
         return self.pop()
 
-    def shuffle(self):
+    def shuffle(self) -> None:
         random.shuffle(self)
 
 
-class Player(object):
-    def __init__(self, color):
+class Player:
+    def __init__(self, color: str) -> None:
         self.color = color
         self.space_index = 0
         self.stuck_in_licorice = False
 
-    def __str__(self):
-        return "Player {}".format(self.color.capitalize())
+    def __str__(self) -> str:
+        return f"Player {self.color.capitalize()}"
 
-    def __repr__(self):
-        return "Player(color={})".format(repr(self.color))
+    def __repr__(self) -> str:
+        return f"Player(color={self.color!r})"
 
 
-def play_game(on_screen=False):
+def play_game(on_screen: bool = False) -> dict:
     result = {}
     game_on = True
     if on_screen:
@@ -297,8 +297,8 @@ def play_game(on_screen=False):
     while game_on:
         round_no += 1
         if on_screen:
-            log("= Beginning of round {}".format(round_no))
-            log("= {} cards left in the deck.".format(len(deck)))
+            log(f"= Beginning of round {round_no}")
+            log(f"= {len(deck)} cards left in the deck.")
         for player in players:
             if on_screen:
                 m = "{} is on space {} and takes a turn."
@@ -337,7 +337,7 @@ def play_game(on_screen=False):
                 result["rounds"] = round_no
                 game_on = False
                 if on_screen:
-                    log("{} wins!".format(player))
+                    log(f"{player} wins!")
                 break
             if space.peppermint_pass_start:
                 player.space_index = board.next_match(0, "peppermint_pass_end")
@@ -354,14 +354,14 @@ def play_game(on_screen=False):
             if space.licorice:
                 player.stuck_in_licorice = True
                 if on_screen:
-                    log("{} gets stuck in licorice!".format(player))
+                    log(f"{player} gets stuck in licorice!")
                 continue
         if on_screen:
-            log("= End of round {}".format(round_no))
+            log(f"= End of round {round_no}")
     return result
 
 
-def main():
+def main() -> None:
     stats = collections.Counter()
     for _ in range(10000):
         result = play_game(on_screen=False)
